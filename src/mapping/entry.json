@@ -1,0 +1,25 @@
+{
+  "create": [
+    {
+      "name": "description",
+      "label": "Description",
+      "type": "textarea"
+    },
+    {
+      "name": "projectId",
+      "label": "Project",
+      "type": "textarea"
+    },
+    {
+      "name": "taskId",
+      "label": "Task",
+      "type": "textarea"
+    },
+    {
+      "name": "tagIds",
+      "label": "Tags",
+      "type": "textarea",
+      "multiple": true
+    }
+  ]
+}
