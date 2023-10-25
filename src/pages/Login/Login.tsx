@@ -33,9 +33,11 @@ export const Login = () => {
     (client) =>
       (async () => {
         if (!apiToken) return;
+
         await client.setUserState("api_token", apiToken, {
           backend: true,
         });
+
         setSubmitted(true);
       })(),
     [apiToken]
@@ -58,6 +60,7 @@ export const Login = () => {
         setValue={(e) => setApiToken(e)}
         title="API Token"
         value={apiToken}
+        data-testid="api-token-input"
       />
       {(workspaces.error as string) && <H1>{workspaces.error as string}</H1>}
       {workspaces.isFetching ? (
@@ -76,6 +79,7 @@ export const Login = () => {
                         fontWeight: "bold",
                         fontSize: "16px",
                       }}
+                      data-testid={`radio-workspace-${workspaceFromList.id}`}
                       checked={workspace === workspaceFromList.id}
                       onChange={() => setWorkspace(workspaceFromList.id)}
                     />
@@ -84,7 +88,7 @@ export const Login = () => {
                 ))}
                 <Button
                   text="Login"
-                  data-testid="submit-button"
+                  data-testid={startLogin ? "startedLogin" : "notStartedLogin"}
                   onClick={() => {
                     if (!workspace) return;
 

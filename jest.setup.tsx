@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "regenerator-runtime/runtime";
 import "@testing-library/jest-dom/extend-expect";
 import "intersection-observer";
-import { useQuery } from "@tanstack/react-query";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { TextDecoder, TextEncoder } from "util";
 import * as React from "react";
 import { lightTheme } from "@deskpro/deskpro-ui";
 import { mockClient } from "./testing";
-import type { IDeskproClient } from "@deskpro/app-sdk";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
@@ -47,20 +46,40 @@ jest.mock("@deskpro/app-sdk", () => ({
       !!hooks.onChange && hooks.onChange(context);
       !!hooks.onShow && hooks.onShow(context);
       !!hooks.onReady && hooks.onReady(context);
-      !!hooks.onAdminSettingsChange && hooks.onAdminSettingsChange(context.settings);
+      !!hooks.onAdminSettingsChange &&
+        hooks.onAdminSettingsChange(context.settings);
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, deps);
   },
-  useInitialisedDeskproAppClient: (callback: (param: typeof mockClient) => void) => {
+  useInitialisedDeskproAppClient: (
+    callback: (param: typeof mockClient) => void
+  ) => {
     callback(mockClient);
   },
   useDeskproLatestAppContext: () => ({ context }),
   useDeskproAppTheme: () => ({ theme: lightTheme }),
   proxyFetch: async () => fetch,
   LoadingSpinner: () => <>Loading...</>,
-  useQueryWithClient: (
-    queryKey: string[],
-    queryFn: (client: IDeskproClient) => Promise<void>,
-    options: object,
-  ) => useQuery(queryKey, () => queryFn(mockClient as never), options),
+  useQueryWithClient: (queryKey: string, queryFn: () => any, options: any) => {
+    queryKey;
+    options;
+    if (!options || options?.enabled == null || options?.enabled == true) {
+      return {
+        isSuccess: true,
+        data: queryFn(),
+        isLoading: false,
+        refetch: () => {},
+      };
+    }
+    return {
+      isSuccess: false,
+      data: null,
+      isLoading: false,
+    };
+  },
+}));
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => jest.fn(),
 }));

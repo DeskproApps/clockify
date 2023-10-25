@@ -5,6 +5,7 @@ import {
   useDeskproLatestAppContext,
   useInitialisedDeskproAppClient,
   useQueryWithClient,
+  Select,
 } from "@deskpro/app-sdk";
 import {
   AnyIcon,
@@ -15,6 +16,7 @@ import {
   P8,
   Stack,
   Tag,
+  Label,
 } from "@deskpro/deskpro-ui";
 import {
   faPlus,
@@ -34,13 +36,12 @@ import {
   isRunning,
   stopTimeEntry,
 } from "../../api/api";
-import { DropdownSelect } from "../../components/DropdownSelect/DropdownSelect";
 import { InputWithTitle } from "../../components/InputWithTitle/InputWithTitle";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinnerCenter/LoadingSpinnerCenter";
 import { Property } from "../../styles";
 import { colors, dateToHHMMSS } from "../../utils/utils";
-import { DateField } from "../../components/DateField/DateField";
 import { TwoButtonGroup } from "../../components/TwoButtonGroup/TwoButtonGroup";
+import { DateField } from "../../components/DateField/DateField";
 
 export const Timer = () => {
   const navigate = useNavigate();
@@ -140,7 +141,6 @@ export const Timer = () => {
   const toggled = timeEntriesQuery.data?.find(
     (e) => e.timeInterval.end === null
   );
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (!timeEntriesQuery.data) return;
@@ -244,15 +244,18 @@ export const Timer = () => {
         disabled={!!toggled}
       />
       {projectsQuery.data.length > 0 && (
-        <DropdownSelect
-          onChange={!toggled ? setProject : () => {}}
-          title="Project"
-          value={project}
-          data={projectsQuery.data?.map((e) => ({
-            key: e.name,
-            value: e.id,
-          }))}
-        />
+        <Label label="Project">
+          <Select<string>
+            onChange={() => !toggled && setProject}
+            options={projectsQuery.data?.map((e) => ({
+              key: e.id,
+              label: e.name,
+              value: e.id,
+              type: "value",
+            }))}
+            initValue={[]}
+          />
+        </Label>
       )}
       <Stack vertical style={{ width: "100%" }}>
         <Stack vertical style={{ color: theme.colors.grey80 }} gap={5}>
@@ -275,16 +278,21 @@ export const Timer = () => {
           </Stack>
         </Stack>
         <Stack gap={5} style={{ width: "100%", alignItems: "center" }}>
-          <DropdownSelect
-            data={tagsQuery.data
-              ?.filter((e) => !e.name.startsWith("deskpro-ticket-"))
-              .map((e) => ({
-                key: e.name,
-                value: e.id,
-              }))}
-            value={tags}
-            onChange={!toggled ? setTags : () => {}}
-            multiple
+          <Select<string>
+            options={
+              tagsQuery.data
+                ?.filter((e) => !e.name.startsWith("deskpro-ticket-"))
+                .map((e) => ({
+                  key: e.id,
+                  label: e.name,
+                  value: e.id,
+                  type: "value",
+                })) ?? []
+            }
+            initValue={[]}
+            onChange={(value) => {
+              !toggled && setTags(value as string[]);
+            }}
           >
             <Button
               text="Add"
@@ -294,7 +302,7 @@ export const Timer = () => {
                 borderBottom: `1px solid ${theme.colors.grey20}`,
               }}
             />
-          </DropdownSelect>
+          </Select>
         </Stack>
       </Stack>
       <Stack vertical gap={5}>
@@ -332,6 +340,7 @@ export const Timer = () => {
       )}
       <Button
         loading={loading}
+        data-testid="change-time-entry"
         text={page === 1 ? "⠀⠀Create⠀⠀" : toggled ? "⠀⠀Stop⠀⠀" : "⠀⠀Start⠀⠀"}
         onClick={async () => {
           if (toggled) {

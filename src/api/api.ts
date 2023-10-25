@@ -1,4 +1,9 @@
-import { IDeskproClient, ProxyResponse, proxyFetch } from "@deskpro/app-sdk";
+import {
+  IDeskproClient,
+  ProxyResponse,
+  V2ProxyRequestInit,
+  proxyFetch,
+} from "@deskpro/app-sdk";
 import { ICreateTimeEntry, ITimeEntry } from "../types/timeEntry";
 import { RequestMethod } from "./types";
 import { IWorkspace } from "../types/workspace";
@@ -118,7 +123,7 @@ const installedRequest = async (
 ) => {
   const fetch = await proxyFetch(client);
 
-  const options: RequestInit = {
+  const options: V2ProxyRequestInit = {
     method,
     headers: {
       "Content-Type": "application/json",
