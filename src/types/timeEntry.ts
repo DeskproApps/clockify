@@ -16,4 +16,7 @@ export interface ITimeEntry {
     duration: string;
   };
   tagIds: string[];
+  projectId: string;
+  description: string;
+  billable: boolean;
 }

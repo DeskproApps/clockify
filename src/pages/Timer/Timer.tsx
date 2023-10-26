@@ -33,6 +33,7 @@ import {
   getTagsByWorkspaceId,
   getTimeEntriesByUserIdAndTagId,
   getUser,
+  getWorkspaces,
   isRunning,
   stopTimeEntry,
 } from "../../api/api";
@@ -42,11 +43,13 @@ import { Property } from "../../styles";
 import { colors, dateToHHMMSS } from "../../utils/utils";
 import { TwoButtonGroup } from "../../components/TwoButtonGroup/TwoButtonGroup";
 import { DateField } from "../../components/DateField/DateField";
+import { queryClient } from "../../query";
 
 export const Timer = () => {
   const navigate = useNavigate();
   const { theme } = useDeskproAppTheme();
 
+  const [isProjReq, setIsProjReq] = useState<boolean | null>(null);
   const [page, setPage] = useState<number>(0);
   const [initiallyChecked, setInitiallyChecked] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -88,6 +91,8 @@ export const Timer = () => {
     async onElementEvent(id) {
       switch (id) {
         case "menuButton":
+          queryClient.clear();
+
           client?.setUserState("workspace", "");
 
           navigate("/login");
@@ -95,13 +100,21 @@ export const Timer = () => {
     },
   });
 
-  const user = useQueryWithClient(["user"], (client) => getUser(client));
+  const workspacesQuery = useQueryWithClient(
+    ["workspaces"],
+    (client) => getWorkspaces(client),
+    {
+      enabled: !!client,
+    }
+  );
+
+  const userQuery = useQueryWithClient(["user"], (client) => getUser(client));
 
   const isInitiallyRunningQuery = useQueryWithClient(
     ["isRunning"],
-    (client) => isRunning(client, user.data?.id as string),
+    (client) => isRunning(client, userQuery.data?.id as string),
     {
-      enabled: !!user.data?.id,
+      enabled: !!userQuery.data?.id,
     }
   );
 
@@ -122,15 +135,15 @@ export const Timer = () => {
   );
 
   const timeEntriesQuery = useQueryWithClient(
-    ["getTimeEntriesByUserIdAndTagId", user.data, tagQuery.data],
+    ["getTimeEntriesByUserIdAndTagId", userQuery.data, tagQuery.data],
     (client) =>
       getTimeEntriesByUserIdAndTagId(
         client,
-        user.data?.id as string,
+        userQuery.data?.id as string,
         tagQuery.data.id
       ),
     {
-      enabled: !!user.isSuccess && !!tagQuery.isSuccess,
+      enabled: !!userQuery.isSuccess && !!tagQuery.isSuccess,
     }
   );
 
@@ -141,6 +154,30 @@ export const Timer = () => {
   const toggled = timeEntriesQuery.data?.find(
     (e) => e.timeInterval.end === null
   );
+
+  useEffect(() => {
+    (async () => {
+      const currentWorkspaceId = await client?.getUserState("workspace");
+
+      const workspace = workspacesQuery.data?.find(
+        (e) => e.id === currentWorkspaceId?.[0].data
+      );
+
+      if (!workspace) return;
+
+      setIsProjReq(workspace.workspaceSettings.forceProjects);
+    })();
+  });
+
+  useEffect(() => {
+    if (initiallyChecked || !timeEntriesQuery.isSuccess || !toggled) return;
+
+    setProject(toggled.projectId);
+    setSubject(toggled.description);
+    setIsBillable(toggled.billable);
+    setTags(toggled.tagIds);
+  }, [initiallyChecked, timeEntriesQuery.isSuccess, toggled]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (!timeEntriesQuery.data) return;
@@ -182,8 +219,10 @@ export const Timer = () => {
     !client ||
     !timeEntriesQuery.isSuccess ||
     timePassedMs === null ||
-    !user.isSuccess ||
-    !projectsQuery.isSuccess
+    !userQuery.isSuccess ||
+    !projectsQuery.isSuccess ||
+    !workspacesQuery.isSuccess ||
+    isProjReq === null
   )
     return <LoadingSpinnerCenter />;
 
@@ -207,7 +246,7 @@ export const Timer = () => {
             setLoading(true);
             await stopTimeEntry(
               client,
-              user.data.id,
+              userQuery.data.id,
               new Date().toISOString()
             ).then(() => {
               isInitiallyRunningQuery.refetch();
@@ -242,17 +281,20 @@ export const Timer = () => {
         title="Description"
         setValue={setSubject}
         disabled={!!toggled}
+        value={subject}
       />
       {projectsQuery.data.length > 0 && (
         <Label label="Project">
           <Select<string>
-            onChange={() => !toggled && setProject}
+            onChange={(e) => setProject(e[0])}
             options={projectsQuery.data?.map((e) => ({
               key: e.id,
               label: e.name,
               value: e.id,
               type: "value",
             }))}
+            error={!toggled && !project}
+            disabled={!!toggled}
             initValue={[]}
           />
         </Label>
@@ -348,7 +390,7 @@ export const Timer = () => {
 
             await stopTimeEntry(
               client,
-              user.data.id,
+              userQuery.data.id,
               new Date().toISOString()
             ).then(() => {
               timeEntriesQuery.refetch();
@@ -359,15 +401,22 @@ export const Timer = () => {
             return;
           }
 
-          if (page === 1 && (!startDate || !endDate)) return;
+          if (
+            (page === 1 && (!startDate || !endDate)) ||
+            (!project && isProjReq)
+          )
+            return;
 
           setLoading(true);
 
           await createTimeEntry(client, {
             start: new Date().toISOString(),
             description: subject,
-            tagIds: [tagQuery.data.id, ...tags],
-            projectId: project,
+            tagIds: [
+              tagQuery.data.id,
+              ...tags.filter((e) => e !== tagQuery.data.id),
+            ],
+            ...(project && { projectId: project }),
             billable: isBillable,
             ...(page === 1 ? { start: startDate, end: endDate } : {}),
           }).then(() => {

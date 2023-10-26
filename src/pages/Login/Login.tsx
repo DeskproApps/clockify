@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { InputWithTitle } from "../../components/InputWithTitle/InputWithTitle";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinnerCenter/LoadingSpinnerCenter";
 import { getWorkspaces } from "../../api/api";
+import { parseJsonErrorMessage } from "../../utils/utils";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -19,9 +20,9 @@ export const Login = () => {
   const [startLogin, setStartLogin] = useState<boolean>(false);
 
   const workspaces = useQueryWithClient(
-    ["workspaces", submitted as unknown as string],
+    ["workspaces", submitted as unknown as string, apiToken as string],
     (client) => getWorkspaces(client),
-    { enabled: !!submitted }
+    { enabled: !!submitted, useErrorBoundary: false }
   );
 
   useInitialisedDeskproAppClient((client) => {
@@ -61,8 +62,17 @@ export const Login = () => {
         title="API Token"
         value={apiToken}
         data-testid="api-token-input"
+        error={!!workspaces.error}
       />
-      {(workspaces.error as string) && <H1>{workspaces.error as string}</H1>}
+      {(workspaces.error as string) && !workspaces.isFetching && (
+        <H1 style={{ color: theme.colors.red100 }}>
+          {
+            parseJsonErrorMessage(
+              (workspaces.error as Error).toString()
+            ) as string
+          }
+        </H1>
+      )}
       {workspaces.isFetching ? (
         <LoadingSpinnerCenter />
       ) : (

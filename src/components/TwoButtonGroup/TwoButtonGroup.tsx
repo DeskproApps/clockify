@@ -61,6 +61,7 @@ export const TwoButtonGroup = ({
       intent="secondary"
       icon={twoIcon}
       size="large"
+      data-testid="change-time-entry-manual"
       selected={selected === "two"}
       onClick={twoOnClick}
     />

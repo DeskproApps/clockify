@@ -36,6 +36,9 @@ export const createTag = async (client: IDeskproClient, name: string) =>
 export const getUser = (client: IDeskproClient): Promise<{ id: string }> =>
   installedRequest(client, "user", "GET");
 
+export const getWorkspaces = (client: IDeskproClient): Promise<IWorkspace[]> =>
+  installedRequest(client, `workspaces`, "GET");
+
 export const stopTimeEntry = (
   client: IDeskproClient,
   userId: string,
@@ -112,9 +115,6 @@ export const getTaskByWorkspaceProjectId = (
     "GET"
   );
 
-export const getWorkspaces = (client: IDeskproClient): Promise<IWorkspace[]> =>
-  installedRequest(client, "workspaces", "GET");
-
 const installedRequest = async (
   client: IDeskproClient,
   endpoint: string,
@@ -144,12 +144,10 @@ const installedRequest = async (
     isResponseError(response) ||
     (response.status === 400 && endpoint === "tags")
   ) {
-    throw new Error(
-      JSON.stringify({
-        status: response.status,
-        message: await response.text(),
-      })
-    );
+    throw JSON.stringify({
+      status: response.status,
+      message: await response.text(),
+    });
   }
 
   const json = await response.json();
