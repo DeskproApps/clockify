@@ -39,8 +39,8 @@ jest.mock("../../../src/api/api", () => {
   };
 });
 
-describe("Login Page", () => {
-  test("Timer should work correctly", async () => {
+describe("Timer Page", () => {
+  test("Automatic Timer should work correctly", async () => {
     act(async () => {
       const { getByTestId, getByText } = renderPage();
 
@@ -49,6 +49,46 @@ describe("Login Page", () => {
       fireEvent.click(getByTestId("change-time-entry"));
 
       await waitFor(() => expect(getByText(/00:00:5/i)).toBeInTheDocument());
+    });
+  });
+
+  test("Error should be catched", async () => {
+    act(async () => {
+      jest.mock("../../../src/api/api", () => {
+        return {
+          getWorkspaces: jest.fn(() => [
+            {
+              id: "1",
+              name: "workspace",
+            },
+          ]),
+          getUser: jest.fn(() => ({
+            id: "1",
+            name: "user",
+          })),
+          isRunning: jest.fn(() => ({
+            tagIds: [],
+          })),
+          getTagsByWorkspaceId: jest.fn(() => []),
+          getTag: jest.fn(() => ({
+            id: 1,
+          })),
+          timeEntries: jest.fn(() => []),
+          getProjectsByWorkspaceId: jest.fn(() => []),
+          createTimeEntry: jest.fn(() => {
+            throw new Error("Error");
+          }),
+          getTimeEntriesByUserIdAndTagId: jest.fn(() => []),
+        };
+      });
+
+      const { getByTestId, getByText } = renderPage();
+
+      await waitFor(() => getByTestId(/change-time-entry-manual/i));
+
+      fireEvent.click(getByTestId("change-time-entry-manual"));
+
+      await waitFor(() => expect(getByText(/Error/i)).toBeInTheDocument());
     });
   });
 
