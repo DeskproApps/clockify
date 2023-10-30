@@ -3,13 +3,14 @@ import {
   useInitialisedDeskproAppClient,
   useQueryWithClient,
 } from "@deskpro/app-sdk";
-import { Button, H1, Radio, Stack } from "@deskpro/deskpro-ui";
+import { Button, H1, H5, Radio, Stack } from "@deskpro/deskpro-ui";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputWithTitle } from "../../components/InputWithTitle/InputWithTitle";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinnerCenter/LoadingSpinnerCenter";
 import { getWorkspaces } from "../../api/api";
 import { parseJsonErrorMessage } from "../../utils/utils";
+import { StyledLink } from "../../styles";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -64,6 +65,17 @@ export const Login = () => {
         data-testid="api-token-input"
         error={!!workspaces.error}
       />
+      {!submitted && (
+        <div>
+          <H5>You can find the API Token at the bottom of the</H5>
+          <StyledLink
+            to="https://app.clockify.me/user/settings"
+            target="_blank"
+          >
+            Clockify User Settings Page
+          </StyledLink>
+        </div>
+      )}
       {(workspaces.error as string) && !workspaces.isFetching && (
         <H1 style={{ color: theme.colors.red100 }}>
           {
@@ -73,6 +85,7 @@ export const Login = () => {
           }
         </H1>
       )}
+      {!submitted}
       {workspaces.isFetching ? (
         <LoadingSpinnerCenter />
       ) : (

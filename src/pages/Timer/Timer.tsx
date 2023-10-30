@@ -356,14 +356,6 @@ export const Timer = () => {
           onChange={() => setIsBillable(!isBillable)}
         />
       </Stack>
-      {page === 0 && (
-        <div style={{ fontWeight: "bold" }}>
-          <Property
-            label="Time Elapsed"
-            text={<H2>{dateToHHMMSS(timePassedMs).toString()}</H2>}
-          />
-        </div>
-      )}
       {page === 1 && (
         <>
           <DateField
@@ -429,6 +421,12 @@ export const Timer = () => {
           setLoading(false);
         }}
       />
+      <div style={{ fontWeight: "bold" }}>
+        <Property
+          label="Time Elapsed"
+          text={<H2>{dateToHHMMSS(timePassedMs).toString()}</H2>}
+        />
+      </div>
     </Stack>
   );
 };
