@@ -22,6 +22,12 @@ jest.mock("../../../src/api/api", () => {
   };
 });
 
+jest.mock("../../../src/styles", () => {
+  return {
+    StyledLink: "a",
+  };
+});
+
 describe("Login Page", () => {
   test("Login should work correctly", async () => {
     const { getByTestId, getByText } = renderPage();
