@@ -2,25 +2,16 @@
   "name": "@deskpro-apps/clockify",
   "title": "Clockify",
   "description": "Precise time management simplified with Clockify",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
-  "targets": [
-    {
-      "target": "ticket_sidebar",
-      "entrypoint": "index.html"
-    }
-  ],
+  "targets": [{ "target": "ticket_sidebar", "entrypoint": "index.html" }],
   "proxy": {
     "whitelist": [
       {
         "url": "https://api.clockify.me/api/v1/.*",
-        "methods": [
-          "GET",
-          "POST",
-          "PATCH"
-        ],
+        "methods": ["GET", "POST", "PATCH"],
         "timeout": 20
       }
     ]
