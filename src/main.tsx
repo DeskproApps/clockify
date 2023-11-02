@@ -1,29 +1,14 @@
-import { StrictMode, Suspense } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { HashRouter } from "react-router-dom";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
-import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
-import { queryClient } from "./query";
-import "iframe-resizer/js/iframeResizer.contentWindow.js";
-import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
-import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 import "./index.css";
-import { App } from "./App";
+import App from "./App";
+import { DeskproAppProvider } from "@deskpro/app-sdk";
 
-const root = ReactDOM.createRoot(document.getElementById('root') as Element);
-root.render((
-  <StrictMode>
+const root = ReactDOM.createRoot(document.getElementById("root") as Element);
+root.render(
+  <React.StrictMode>
     <DeskproAppProvider>
-      <HashRouter>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<LoadingSpinner/>}>
-            <ErrorBoundary fallback={<>here was an error!</>}>
-              <App />
-            </ErrorBoundary>
-          </Suspense>
-        </QueryClientProvider>
-      </HashRouter>
+      <App />
     </DeskproAppProvider>
-  </StrictMode>
-));
+  </React.StrictMode>
+);
