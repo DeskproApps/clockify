@@ -286,7 +286,7 @@ export const Timer = () => {
       {projectsQuery.data.length > 0 && (
         <Label label="Project">
           <Select<string>
-            onChange={(e) => setProject(e[0])}
+            onChange={(e) => setProject(e && e[0])}
             options={projectsQuery.data?.map((e) => ({
               key: e.id,
               label: e.name,
