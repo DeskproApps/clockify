@@ -2,7 +2,7 @@
   "name": "@deskpro-apps/clockify",
   "title": "Clockify",
   "description": "Precise time management simplified with Clockify",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "appStoreUrl": "https://www.deskpro.com/product-embed/apps/clockify",
   "scope": "agent",
   "isSingleInstall": false,
