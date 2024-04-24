@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@deskpro/app-sdk':
-    specifier: ^3.0.20
-    version: 3.0.20(@babel/core@7.23.9)(@deskpro/deskpro-ui@7.9.0)(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@4.9.5)
+    specifier: 3.0.15
+    version: 3.0.15(@babel/core@7.23.9)(@deskpro/deskpro-ui@7.9.0)(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@4.9.5)
   '@deskpro/deskpro-ui':
     specifier: ^7.1.0
     version: 7.9.0(@types/web@0.0.86)(react-dom@18.2.0)(react@18.2.0)(styled-components@5.3.11)
@@ -20,6 +20,9 @@ dependencies:
   '@types/react-flatpickr':
     specifier: ^3.8.10
     version: 3.8.10
+  iframe-resizer:
+    specifier: ^4.3.11
+    version: 4.3.11
   polished:
     specifier: ^4.1.1
     version: 4.2.2
@@ -550,8 +553,8 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@deskpro/app-sdk@3.0.20(@babel/core@7.23.9)(@deskpro/deskpro-ui@7.9.0)(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-Qw9Hv+D5gawdk3yN9qhv38S0ua05GQjKDUN6LZKS8p2ttuisH69sLtFahxS83JpnMfuf34l4C4Ooiqomgd9S/g==}
+  /@deskpro/app-sdk@3.0.15(@babel/core@7.23.9)(@deskpro/deskpro-ui@7.9.0)(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(typescript@4.9.5):
+    resolution: {integrity: sha512-LkgXL8G3Ran9XdG2AhriUkLpesbkT6dVT+o8fBBQr5EiDtTL6Omh3dO07VSXabttr3x7rR0+1A4yo9A5wBk1IA==}
     engines: {node: ^16.0.0}
     peerDependencies:
       '@deskpro/deskpro-ui': ^7
@@ -3322,6 +3325,11 @@ packages:
     dependencies:
       safer-buffer: 2.1.2
     dev: true
+
+  /iframe-resizer@4.3.11:
+    resolution: {integrity: sha512-5QtnsmfH11GDsuC7Gxd/eNzojudX3346Gb0E+Ku8ln8AtfSq+cWCZtnhCrthrtE7f1CI2/kwHkZ9G4sFYzHP7A==}
+    engines: {node: '>=0.8.0'}
+    dev: false
 
   /ignore@4.0.6:
     resolution: {integrity: sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==}
