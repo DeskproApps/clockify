@@ -57,7 +57,7 @@ export const Login = () => {
   );
 
   return (
-    <Stack vertical gap={10}>
+    <Stack vertical gap={10} style={{ padding: "8px", boxSizing: 'border-box'}}>
       <InputWithTitle
         setValue={(e) => setApiToken(e)}
         title="API Token"
