@@ -232,7 +232,7 @@ export const Timer = () => {
     !isInitiallyRunningQuery.data?.tagIds.includes(tagQuery.data.id)
   ) {
     return (
-      <Stack vertical gap={10}>
+      <Stack vertical gap={10} style={{ padding: "8px", boxSizing: 'border-box'}}>
         <H1>
           There is currently a time entry already running that does not belong
           to this ticket.
@@ -260,7 +260,7 @@ export const Timer = () => {
   }
 
   return (
-    <Stack vertical gap={10}>
+    <Stack vertical gap={10} style={{ padding: "8px", boxSizing: 'border-box'}}>
       <Stack style={{ alignSelf: "center", width: "100%" }}>
         <TwoButtonGroup
           selected={
