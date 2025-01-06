@@ -1,7 +1,5 @@
 import {
   IDeskproClient,
-  ProxyResponse,
-  V2ProxyRequestInit,
   proxyFetch,
 } from "@deskpro/app-sdk";
 import { ICreateTimeEntry, ITimeEntry } from "../types/timeEntry";
@@ -123,7 +121,7 @@ const installedRequest = async (
 ) => {
   const fetch = await proxyFetch(client);
 
-  const options: V2ProxyRequestInit = {
+  const options: RequestInit = {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -159,5 +157,5 @@ const installedRequest = async (
   return json;
 };
 
-export const isResponseError = (response: ProxyResponse) =>
+export const isResponseError = (response: Response) =>
   response.status < 200 || response.status >= 400;
