@@ -62,7 +62,7 @@ export const Timer = () => {
   const [endDate, setEndDate] = useState<string | undefined>(undefined);
 
   const { client } = useDeskproAppClient();
-  const { context } = useDeskproLatestAppContext();
+  const { context } = useDeskproLatestAppContext<{ticket: {id: number}}, unknown>();
   const [refreshedTimePassed, setRefreshedTimePassed] =
     useState<boolean>(false);
 
@@ -120,9 +120,9 @@ export const Timer = () => {
 
   const tagQuery = useQueryWithClient(
     ["tag"],
-    (client) => getTag(client, `deskpro-ticket-${context?.data.ticket.id}`),
+    (client) => getTag(client, `deskpro-ticket-${context?.data?.ticket.id}`),
     {
-      enabled: !!context?.data.ticket.id,
+      enabled: !!context?.data?.ticket.id,
     }
   );
 
@@ -130,7 +130,7 @@ export const Timer = () => {
     ["tags"],
     (client) => getTagsByWorkspaceId(client),
     {
-      enabled: !!context?.data.ticket.id,
+      enabled: !!context?.data?.ticket.id,
     }
   );
 

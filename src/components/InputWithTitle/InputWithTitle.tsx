@@ -1,5 +1,6 @@
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { H1, Input, P8, Stack } from "@deskpro/deskpro-ui";
+import { ChangeEvent } from "react";
 
 type Props = {
   title: string;
@@ -37,7 +38,7 @@ export const InputWithTitle = ({
         placeholder={`Enter value`}
         style={{ fontWeight: "normal" }}
         type={"title"}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
         value={value}
         {...attributes}
       />
