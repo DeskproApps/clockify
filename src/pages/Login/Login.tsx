@@ -67,12 +67,12 @@ export const Login = () => {
       />
       {!submitted && (
         <div>
-          <H5>You can find the API Token at the bottom of the</H5>
+          <H5>You can find the API Token in the</H5>
           <StyledLink
-            to="https://app.clockify.me/user/settings"
+            to='https://app.clockify.me/user/preferences#advanced'
             target="_blank"
           >
-            Clockify User Settings Page
+            'Advanced' tab of the 'Preferences' from the user menu.
           </StyledLink>
         </div>
       )}
