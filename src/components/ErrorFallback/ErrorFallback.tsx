@@ -12,7 +12,7 @@ export const ErrorFallback: FallbackRender = ({
     <Stack vertical gap={10} role="alert">
       <H1>Something went wrong:</H1>
       <H2 style={{ maxWidth: "100%" }}>
-        {parseJsonErrorMessage((error as any).message)}
+        {parseJsonErrorMessage((error as Error).message)}
       </H2>
       <Button
         text="Reload"
